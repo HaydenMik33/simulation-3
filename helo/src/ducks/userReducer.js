@@ -1,9 +1,9 @@
 import axios from "axios";
-const GET_USER = "GET_USER";
-export function getUser() {
+const USER_INFO = "USER_INFO";
+export function userInfo(user) {
   return {
-    type: GET_USER,
-    payload: axios.get("/api/auth/login")
+    type: USER_INFO,
+    payload: user
   };
 }
 
@@ -13,14 +13,13 @@ const initialState = {
 
 export default function userReducer(state = initialState, action) {
   switch (action.type) {
-    case `${GET_USER}_PENDING`:
-      return {
-        link: "https://media.giphy.com/media/l3E6oxUBsPufSXVLi/giphy.gif"
-      };
-    case `${GET_USER}_FULFILLED`:
+    // case `${GET_USER}_PENDING`:
+    //   return {
+    //   };
+    case USER_INFO:
       return {
         ...state,
-        user: action.payload.data
+        user: action.payload
       };
 
     default:

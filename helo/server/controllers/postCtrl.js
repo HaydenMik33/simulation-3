@@ -1,9 +1,11 @@
 const getPostsByUserId = (req, res) => {
-  console.log("hit /api/posts/:userid");
-  const { search, userposts } = req.query;
-  const { userid } = req.params;
+  console.log("hit post/api/posts");
+  console.log(req.body);
+  const { search, userposts } = req.body;
+  const { userid } = req.session;
+  console.log(userid);
   userposts
-    ? app
+    ? req.app
         .get("db")
         .getAllPosts()
         .then(posts => {
@@ -18,7 +20,7 @@ const getPostsByUserId = (req, res) => {
                 )
             : res.status(200).send(posts);
         })
-    : app
+    : req.app
         .get("db")
         .getAllPostsButUser([userid])
         .then(posts => {
@@ -43,7 +45,7 @@ const getPost = (req, res) => {
 const uploadPost = (req, res) => {
   console.log("hit /api/post/:userid");
   const { title, img, content } = req.body;
-  const { userid } = req.params;
+  const { userid } = req.session;
 };
 
 module.exports = {

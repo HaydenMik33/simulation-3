@@ -1,16 +1,21 @@
 import React, { Component } from "react";
 import "./Nav.css";
 import { connect } from "react-redux";
+import axios from "axios";
+import { Link } from "react-router-dom";
 
-const Nav = () => {
-  return (
-    <div className="Nav">
-      {/* <img src={this.props.profile_pic} />
-      <p>{this.props.username}</p> */}
-      sth
-    </div>
-  );
-};
+class Nav extends Component {
+  render() {
+    return (
+      <div className="Nav">
+        <span className="profile_img" />
+        <Link to="/" onClick={() => axios.post("/api/auth/logout")}>
+          Logout
+        </Link>
+      </div>
+    );
+  }
+}
 function mapStateToProps(state) {
   return {
     user: state.userReducer.user

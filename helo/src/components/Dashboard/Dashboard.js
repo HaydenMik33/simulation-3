@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import "./Dashboard.css";
 import axios from "axios";
 import { connect } from "react-redux";
+import { withRouter } from "react-router-dom";
+import { getPost } from "../../ducks/postReducer";
 // /dashboard
 class Dashboard extends Component {
   state = {
@@ -9,28 +11,52 @@ class Dashboard extends Component {
     search: "",
     userposts: true
   };
-  getAllPosts(id) {
-    axios.get(`/api/posts/${id}`);
-  }
-  componentDidMount() {}
 
+  getAllPosts() {
+    const { search, userposts } = this.state;
+    console.log(search, userposts);
+    axios.post("/api/posts", { search, userposts }).then(res => {
+      this.setState({ posts: res.data });
+    });
+  }
+  componentDidMount() {
+    this.getAllPosts();
+  }
+  componentDidUpdate(prevProps, prevState) {
+    const { userposts } = this.state;
+    if (prevState.userposts !== userposts) this.getAllPosts();
+  }
   resetSearch() {}
   render() {
+    console.log(this.state);
     const { posts } = this.state;
-    const postsList = posts[0]
-      ? posts.map((el, i) => {
-          <div key={i}>
-            <h1>{el.title}</h1>
-            <p>{el.username}</p>
-            <p>{el.profile_pic}</p>
-          </div>;
-        })
-      : null;
+    const { getPost, history } = this.props;
+    const postsList = posts.map((el, i) => {
+      return (
+        <div
+          key={i}
+          onClick={() => {
+            getPost(el);
+            history.push(`/post/${el.id}`);
+          }}
+        >
+          <h1>{el.title}</h1>
+          <p>{el.username}</p>
+          {/* <img alt="profile_photo" src={el.profile_pic} />
+          <img alt="posted_imaged" src={el.img} /> */}
+        </div>
+      );
+    });
+
     return (
       <div className="Dashb">
         <div className="Dashb_search">
-          <form onSubmit={() => alert("submitted")}>
-            <input type="text" placeholder="Search by title" />
+          <form onSubmit={() => this.getAllPosts()}>
+            <input
+              type="text"
+              placeholder="Search by title"
+              onChange={e => this.setState({ search: e.target.value })}
+            />
             <input type="submit" value="Submit" />
           </form>
           <button>Reset</button>
@@ -42,6 +68,7 @@ class Dashboard extends Component {
           />
         </div>
         <div className="Dashb_postDisplay">{postsList}</div>
+        <footer>this is my footer</footer>
       </div>
     );
   }
@@ -51,4 +78,9 @@ function mapStatetoProps(state) {
     user: state.userReducer.user
   };
 }
-export default connect(mapStatetoProps)(Dashboard);
+export default withRouter(
+  connect(
+    mapStatetoProps,
+    { getPost }
+  )(Dashboard)
+);

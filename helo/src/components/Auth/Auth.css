@@ -1,0 +1,19 @@
+#Auth_h1 {
+  color: steelblue;
+}
+
+.buttons > button {
+  border: none;
+}
+p,
+h1 {
+  font-family: sans-serif;
+}
+.Auth {
+  margin: 10px;
+  padding: 10px;
+  box-sizing: border-box;
+  position: absolute;
+  top: 20px;
+  left: 50%;
+}

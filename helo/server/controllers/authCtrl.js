@@ -1,10 +1,14 @@
 const login = (req, res) => {
+  console.log("hit the endpoinnt get /api/auth/logi");
   const { username, password } = req.body;
+  const { session } = req;
   req.app
     .get("db")
     .getUser([username, password])
     .then(user => {
-      req.session.userid = user.id;
+      session.userid = user[0].id;
+      session.username = user[0].username;
+      console.log(req.session);
       res.status(200).send(user);
     });
 };
@@ -20,8 +24,9 @@ const addUser = (req, res) => {
       "http://www.bbosch.cl/wp-content/uploads/2017/11/avatar_bbosch.jpg"
     ])
     .then(user => {
-      console.log(req.session.userid);
-      req.session.userid = user.id;
+      req.session.userid = user[0].id;
+      req.session.username = user[0].username;
+      console.log(req.session);
       res.status(200).send(user);
     })
     .catch(() => {

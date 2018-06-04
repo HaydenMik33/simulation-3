@@ -6,6 +6,8 @@ require("dotenv").config();
 const { json } = require("body-parser");
 const cors = require("cors");
 const session = require("express-session");
+// const checkForSession = require("./middlewares/checkForSession");
+
 const massive = require("massive");
 const passport = require("passport");
 // console.log(__dirname);
@@ -34,15 +36,18 @@ app.use(
   })
 );
 
+// app.use(checkForSession);
+
 // AUTH ENDPOINTS
 
-app.get("/api/auth/logout", logout);
+app.post("/api/auth/logout", logout);
+////it's more secure this way
 app.post("/api/auth/register", addUser);
 app.post("/api/auth/login", login);
 
-app.get("/api/posts/:userid", getPostsByUserId);
+app.post("/api/posts", getPostsByUserId);
 app.get("/api/post/:postid", getPost);
-app.post("/api/post/:userid", uploadPost);
+app.post("/api/post", uploadPost);
 
 const port = process.env.PORT || 3001;
 app.listen(port, () => {
